@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:world_time/services/world_time.dart';
+import 'package:localstore/localstore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -8,6 +10,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   Map data = {};
+  final db = Localstore.instance;
 
   @override
   void initState() {
@@ -24,11 +27,7 @@ class _HomeState extends State<Home> {
     });
 
 
-    Future<void> _refresh() async {
 
-
-
-    }
 
     return Scaffold(
       body: RefreshIndicator(
@@ -58,6 +57,9 @@ class _HomeState extends State<Home> {
                       children: <Widget> [
                         FlatButton.icon(onPressed: () async  {
                           dynamic result = await Navigator.pushNamed(context, "/location");
+                          final prefs = await SharedPreferences.getInstance();
+                          prefs.setString("location", result["location"]);
+                          prefs.setString("url", result["url"]);
                           if (result != null) {
                             setState(() {
                               data = result;

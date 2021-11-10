@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:world_time/services/world_time.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:localstore/localstore.dart';
 
 
 class Loading extends StatefulWidget {
@@ -13,8 +15,12 @@ class Loading extends StatefulWidget {
 }
 
 class _LoadingState extends State<Loading> {
+
   void setupWorldTime () async {
-    WorldTime instance = WorldTime(flag: 'germany.png', location: 'Berlin', url: 'Europe/Berlin');
+    final prefs = await SharedPreferences.getInstance();
+    final location = prefs.getString('location') ?? 'Berlin';
+    final url = prefs.getString('url') ??  'Europe/Berlin';
+    WorldTime instance = WorldTime(flag: 'germany.png', location: location, url: url);
     await instance.getTime();
     //Navigator.pushNamed(context, '/home');
     // we push this route on top of the loading route, but we dont want to keep the loading routes underneath so :
