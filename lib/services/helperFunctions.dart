@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
+
+
 class HelperFunctions {
   static Future checkIntenetConnection() async {
     try {
@@ -16,7 +18,7 @@ class HelperFunctions {
     }
   }
 
-  static Future showNoConnectionDialog(BuildContext context,Function tryAgain )  {
+  static Future showNoConnectionDialog(BuildContext context)  {
     return showDialog<String>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
@@ -24,8 +26,10 @@ class HelperFunctions {
         content: const Text('Please check your internet connection!'),
         actions: <Widget>[
           TextButton(
-            onPressed: tryAgain(),
-            child: const Text('Try again'),
+            onPressed: () async {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Close'),
           ),
         ],
       ),

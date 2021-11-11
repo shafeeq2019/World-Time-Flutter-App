@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:world_time/services/helperFunctions.dart';
 import 'package:world_time/services/world_time.dart';
 import 'package:localstore/localstore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,12 +34,17 @@ class _HomeState extends State<Home> {
       body: RefreshIndicator(
         onRefresh:  () async {
           WorldTime instance = WorldTime(location: data["location"], url: data["url"]);
-          await instance.getTime();
-          setState(() {
-            data["location"] = instance.location;
-            data["time"] = instance.time;
-            data["isDaytime"] = instance.isDaytime;
-          });
+          if (await  HelperFunctions.checkIntenetConnection()) {
+            await instance.getTime();
+            setState(() {
+              data["location"] = instance.location;
+              data["time"] = instance.time;
+              data["isDaytime"] = instance.isDaytime;
+            });
+          }
+          else {
+            HelperFunctions.showNoConnectionDialog(context);
+          }
         },
         child: Container(
           decoration: BoxDecoration(image: DecorationImage(

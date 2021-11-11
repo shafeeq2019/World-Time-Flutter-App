@@ -36,11 +36,8 @@ class _LoadingState extends State<Loading> {
       });
     }
     else {
-      HelperFunctions.showNoConnectionDialog(context, () async {
-        if (await HelperFunctions.checkIntenetConnection()) {
-          setupWorldTime();
-          //Navigator.of(context).pop();
-        }
+      HelperFunctions.showNoConnectionDialog(context).then((data) async {
+        await setupWorldTime();
       });
     }
 
