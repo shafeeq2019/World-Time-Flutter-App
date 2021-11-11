@@ -8,7 +8,7 @@ class WorldTime {
    String? flag; // URL to an asset flag icon
    String? url; //location url for API endpoint
    bool? isDaytime;
-   static final _endPoint = "http://worldtimeapi.org/api/timezone";
+   static const _endPoint = "http://worldtimeapi.org/api/timezone";
 
   // Constructor
   WorldTime({this.location, this.flag, this.url});

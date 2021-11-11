@@ -74,7 +74,7 @@ class _ChooseLocationState extends State<ChooseLocation> {
                                 child: ListTile(
                                   onTap: () async {
                                     await snapshot.data[index].getTime();
-// the same thing as what the arrow do: Pop:
+                                    // the same thing as what the arrow do: Pop:
                                     Navigator.pop(context, {
                                       "location": snapshot.data[index].location,
                                       //flag": snapshot.data[index].flag,

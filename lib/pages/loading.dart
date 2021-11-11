@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:world_time/services/helperFunctions.dart';
 import 'dart:convert';
 import 'package:world_time/services/world_time.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:localstore/localstore.dart';
+import 'dart:io';
+
 
 
 class Loading extends StatefulWidget {
@@ -15,22 +18,32 @@ class Loading extends StatefulWidget {
 }
 
 class _LoadingState extends State<Loading> {
+  Future setupWorldTime () async {
+    if (await  HelperFunctions.checkIntenetConnection()) {
+      final prefs = await SharedPreferences.getInstance();
+      final location = prefs.getString('location') ?? 'Berlin';
+      final url = prefs.getString('url') ??  'Europe/Berlin';
+      WorldTime instance = WorldTime(flag: 'germany.png', location: location, url: url);
+      await instance.getTime();
+      //Navigator.pushNamed(context, '/home');
+      // we push this route on top of the loading route, but we dont want to keep the loading routes underneath so :
+      Navigator.pushReplacementNamed(context, '/home', arguments: {
+        "location": instance.location,
+        "flag": instance.flag,
+        "time": instance.time,
+        "isDaytime": instance.isDaytime,
+        "url": instance.url
+      });
+    }
+    else {
+      HelperFunctions.showNoConnectionDialog(context, () async {
+        if (await HelperFunctions.checkIntenetConnection()) {
+          setupWorldTime();
+          //Navigator.of(context).pop();
+        }
+      });
+    }
 
-  void setupWorldTime () async {
-    final prefs = await SharedPreferences.getInstance();
-    final location = prefs.getString('location') ?? 'Berlin';
-    final url = prefs.getString('url') ??  'Europe/Berlin';
-    WorldTime instance = WorldTime(flag: 'germany.png', location: location, url: url);
-    await instance.getTime();
-    //Navigator.pushNamed(context, '/home');
-    // we push this route on top of the loading route, but we dont want to keep the loading routes underneath so :
-    Navigator.pushReplacementNamed(context, '/home', arguments: {
-      "location": instance.location,
-      "flag": instance.flag,
-      "time": instance.time,
-      "isDaytime": instance.isDaytime,
-      "url": instance.url
-    });
   }
 
   @override
