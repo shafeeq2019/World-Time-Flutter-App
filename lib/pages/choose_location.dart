@@ -12,15 +12,7 @@ class ChooseLocation extends StatefulWidget {
 class _ChooseLocationState extends State<ChooseLocation> {
   TextEditingController editingController = TextEditingController();
 
-  Future<List<WorldTime>> getCountriesList() async {
-    var url_path = Uri.parse('http://worldtimeapi.org/api/timezone');
-    Response response = await get(url_path);
-    List data = jsonDecode(response.body);
-    List<WorldTime> x = data.map((e) {
-      return WorldTime(url: e, location: e);
-    }).toList();
-    return x;
-  }
+
 
   var _future;
   String searchString = "";
@@ -28,7 +20,7 @@ class _ChooseLocationState extends State<ChooseLocation> {
   @override
   void initState() {
     super.initState();
-    _future = getCountriesList();
+    _future = WorldTime.getCountriesList();
   }
 
   @override
