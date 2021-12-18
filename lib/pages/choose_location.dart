@@ -12,8 +12,6 @@ class ChooseLocation extends StatefulWidget {
 class _ChooseLocationState extends State<ChooseLocation> {
   TextEditingController editingController = TextEditingController();
 
-
-
   var _future;
   String searchString = "";
 
@@ -51,8 +49,7 @@ class _ChooseLocationState extends State<ChooseLocation> {
                     filled: true,
                     prefixIcon: Icon(Icons.search),
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(25.0)))
-                ),
+                        borderRadius: BorderRadius.all(Radius.circular(25.0)))),
               ),
             ),
             FutureBuilder(
@@ -74,13 +71,17 @@ class _ChooseLocationState extends State<ChooseLocation> {
                                 child: ListTile(
                                   onTap: () async {
                                     await snapshot.data[index].getTime();
+                                    await snapshot.data[index].getWeather();
                                     // the same thing as what the arrow do: Pop:
                                     Navigator.pop(context, {
                                       "location": snapshot.data[index].location,
                                       //flag": snapshot.data[index].flag,
                                       "time": snapshot.data[index].time,
-                                      "isDaytime": snapshot.data[index].isDaytime,
-                                      "url": snapshot.data[index].url
+                                      "isDaytime":
+                                          snapshot.data[index].isDaytime,
+                                      "url": snapshot.data[index].url,
+                                      "weatherData":
+                                          snapshot.data[index].weatherData
                                     });
                                   },
                                   title: Text(
@@ -109,7 +110,8 @@ class _ChooseLocationState extends State<ChooseLocation> {
                           )
                         ]),
                   );
-                } else if (snapshot.connectionState == ConnectionState.waiting) {
+                } else if (snapshot.connectionState ==
+                    ConnectionState.waiting) {
                   return Expanded(
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -124,7 +126,7 @@ class _ChooseLocationState extends State<ChooseLocation> {
                             padding: EdgeInsets.only(top: 16),
                             child: Text('Loading...'),
                           )
-                        ] ),
+                        ]),
                   );
                 } else {
                   return Text("Error!");

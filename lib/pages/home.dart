@@ -3,6 +3,7 @@ import 'package:world_time/services/helperFunctions.dart';
 import 'package:world_time/services/world_time.dart';
 import 'package:localstore/localstore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:world_time/widgets/WeatherWidget.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -20,37 +21,36 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    data = data.isEmpty ? ModalRoute.of(context)!.settings.arguments as Map : data;
+    data =
+        data.isEmpty ? ModalRoute.of(context)!.settings.arguments as Map : data;
     String bgImage = "";
     // set background
     setState(() {
       bgImage = data['isDaytime'] ? 'day.jpg' : 'night.jpg';
     });
 
-
-
-
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh:  () async {
-          WorldTime instance = WorldTime(location: data["location"], url: data["url"]);
-          if (await  HelperFunctions.checkIntenetConnection()) {
+        onRefresh: () async {
+          WorldTime instance =
+              WorldTime(location: data["location"], url: data["url"]);
+          if (await HelperFunctions.checkIntenetConnection()) {
             await instance.getTime();
+            await instance.getWeather();
             setState(() {
               data["location"] = instance.location;
               data["time"] = instance.time;
               data["isDaytime"] = instance.isDaytime;
+              data["weatherData"] = instance.weatherData;
             });
-          }
-          else {
+          } else {
             HelperFunctions.showNoConnectionDialog(context);
           }
         },
         child: Container(
-          decoration: BoxDecoration(image: DecorationImage(
-            image: AssetImage('assets/$bgImage'),
-            fit: BoxFit.cover
-          )),
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/$bgImage'), fit: BoxFit.cover)),
           child: SingleChildScrollView(
             physics: AlwaysScrollableScrollPhysics(),
             child: SizedBox(
@@ -58,36 +58,51 @@ class _HomeState extends State<Home> {
               width: MediaQuery.of(context).size.width,
               child: SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 120, 0, 0),
-                    child: Column(
-                      children: <Widget> [
-                        FlatButton.icon(onPressed: () async  {
-                          dynamic result = await Navigator.pushNamed(context, "/location");
-                          final prefs = await SharedPreferences.getInstance();
-                          prefs.setString("location", result["location"]);
-                          prefs.setString("url", result["url"]);
-                          if (result != null) {
-                            setState(() {
-                              data = result;
-                            });
-                          }
-                        }, icon: Icon(Icons.edit_location, color: Colors.grey[300],), label: Text('Edit Location', style: TextStyle(color: Colors.white, letterSpacing: 2),)),
-                        SizedBox(height:20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                          Text(data["location"], style: TextStyle(fontSize: 28, letterSpacing: 2,color: Colors.white)),
-                        ],),
-                        SizedBox(height:20),
-                        Text(data['time'],
-                        style: TextStyle(
-                          fontSize: 66,
-                            color: Colors.white
-                        ),)
-                      ]
-                    ),
-                  )
-              ),
+                padding: const EdgeInsets.fromLTRB(0, 120, 0, 0),
+                child: Column(children: <Widget>[
+                  FlatButton.icon(
+                      onPressed: () async {
+                        dynamic result =
+                            await Navigator.pushNamed(context, "/location");
+                        final prefs = await SharedPreferences.getInstance();
+                        prefs.setString("location", result["location"]);
+                        prefs.setString("url", result["url"]);
+                        if (result != null) {
+                          setState(() {
+                            data = result;
+                          });
+                        }
+                      },
+                      icon: Icon(
+                        Icons.edit_location,
+                        color: Colors.grey[300],
+                      ),
+                      label: Text(
+                        'Edit Location',
+                        style: TextStyle(color: Colors.white, letterSpacing: 2),
+                      )),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(data["location"],
+                          style: TextStyle(
+                              fontSize: 28,
+                              letterSpacing: 2,
+                              color: Colors.white)),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    data['time'],
+                    style: TextStyle(fontSize: 66, color: Colors.white),
+                  ),
+                  SizedBox(height: 20),
+                  WeatherWidget(
+                    weatherData: data["weatherData"],
+                  ),
+                ]),
+              )),
             ),
           ),
         ),
