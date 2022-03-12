@@ -1,6 +1,7 @@
-# :clock1: :clock1: Flutter World Time App
+# :clock1: Flutter World Time App :clock1:
 
-A simple Flutter app to get time and weather world's cities. 
+A simple Flutter app to get time and weather world's cities. <br>
+This app should help you to learn flutter.
 
 The [Worldtime API](http://worldtimeapi.org) was used to fetch times. <br>
 The [OpenWeatherMap API](https://api.openweathermap.org) was used to fetch weather infos. <br>
