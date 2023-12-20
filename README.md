@@ -18,5 +18,5 @@ Please star ⭐ the repo if you like what you see😉.
 - [x] Swipe down to refresh time and weather.
 - [x] the last viewed city is saved and displayed the next time the app is opened
 
-## 📸 ScreenShots
+## 📸 Screenshots
 | <img src="screenshots/1.jpg" width="400"> | <img src="screenshots/2.jpg" width="400">   |
