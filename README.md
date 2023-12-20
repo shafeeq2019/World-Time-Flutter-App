@@ -14,7 +14,7 @@ Please star ⭐ the repo if you like what you see😉.
 - A little knowledge of Dart and Flutter
 
 ## ✨ Features
-- [x] Sarch by city name.
+- [x] Search by city name.
 - [x] Swipe down to refresh time and weather.
 - [x] the last viewed city is saved and displayed the next time the app is opened
 
